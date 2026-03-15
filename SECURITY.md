@@ -27,7 +27,7 @@ This policy covers the GraphQL Strava Activities WordPress plugin code in this r
 ## Credential Storage
 
 - API tokens are stored in the WordPress `wp_options` table
-- Optional AES-256-CBC encryption is available via the `GRAPHQL_STRAVA_ENCRYPTION_KEY` constant in `wp-config.php`
+- Optional AES-256-CBC encryption is available via the `WPGRAPHQL_STRAVA_ENCRYPTION_KEY` constant in `wp-config.php`
 - All credentials are sanitized before storage and escaped on output
 
 ## Best Practices for Users

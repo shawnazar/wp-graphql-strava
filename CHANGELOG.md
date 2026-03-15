@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Replaced `error_log()` calls in API client with `wp_trigger_error()` for production use
+- Replaced `strip_tags()` in test mock with `wp_strip_all_tags()` for WPCS compliance
+- Renamed `GRAPHQL_STRAVA_ENCRYPTION_KEY` constant to `WPGRAPHQL_STRAVA_ENCRYPTION_KEY` to match plugin prefix convention
+- Added `phpcs:ignore` comments on WPGraphQL stub functions (must match upstream names)
+- Added `.phpunit.result.cache` to `.distignore`
+- Updated "Tested up to" to WordPress 6.9
+
 ### Changed
 - GitHub Pages documentation site with Docsify (user guide + developer guide)
 - Updated readme.txt sync frequency description and GraphQL example to include all 21 fields

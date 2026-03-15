@@ -11,7 +11,7 @@ By default, WordPress stores option values as plain text in the `wp_options` dat
 Add this to your `wp-config.php`:
 
 ```php
-define( 'GRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-64-character-hex-key' );
+define( 'WPGRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-64-character-hex-key' );
 ```
 
 ### Generate a Key
@@ -32,7 +32,7 @@ This produces a 64-character hex string (256-bit key).
 
 ## How It Works
 
-When `GRAPHQL_STRAVA_ENCRYPTION_KEY` is defined:
+When `WPGRAPHQL_STRAVA_ENCRYPTION_KEY` is defined:
 
 1. **Saving** — Values are encrypted with AES-256-CBC before being stored in `wp_options`. Encrypted values are prefixed with `enc:` for identification.
 2. **Reading** — Values prefixed with `enc:` are decrypted on retrieval.

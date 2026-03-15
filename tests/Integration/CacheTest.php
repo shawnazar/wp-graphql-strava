@@ -84,9 +84,15 @@ class CacheTest extends TestCase {
             }
         );
 
+        Functions\when( 'wp_strip_all_tags' )->alias(
+            function ( string $str ) {
+                return strip_tags( $str ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- test mock.
+            }
+        );
+
         Functions\when( 'sanitize_text_field' )->alias(
             function ( string $str ) {
-                return trim( strip_tags( $str ) );
+                return trim( wp_strip_all_tags( $str ) );
             }
         );
 
