@@ -114,6 +114,9 @@ function wpgraphql_strava_init(): void {
 
 add_action( 'plugins_loaded', 'wpgraphql_strava_init' );
 
+// Self-hosted update checker — runs independently of WPGraphQL.
+require_once WPGRAPHQL_STRAVA_DIR . 'includes/updater.php';
+
 // Cron — refresh cached activities on schedule.
 add_action( 'wpgraphql_strava_cron_refresh', 'wpgraphql_strava_refresh_cache' );
 
