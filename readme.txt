@@ -4,6 +4,7 @@ Tags: graphql, strava, wpgraphql, fitness, activities
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0
+Requires Plugins: wp-graphql
 Stable tag: 1.0.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -12,7 +13,12 @@ Extends WPGraphQL with Strava activity data, server-side SVG route maps, and act
 
 == Description ==
 
-WPGraphQL for Strava brings your Strava activities into your headless WordPress site via GraphQL. Query your rides, runs, and walks with distance, duration, photos, and beautiful server-side SVG route maps — no JavaScript map libraries required.
+GraphQL Strava Activities brings your Strava activities into your headless WordPress site via GraphQL. Query your rides, runs, and walks with distance, duration, photos, and beautiful server-side SVG route maps — no JavaScript map libraries required.
+
+**Requirements:**
+
+* [WPGraphQL](https://www.wpgraphql.com/) 2.0 or newer (required — the plugin will not activate without it)
+* A [Strava API application](https://www.strava.com/settings/api) with OAuth credentials
 
 **Features:**
 
@@ -21,6 +27,8 @@ WPGraphQL for Strava brings your Strava activities into your headless WordPress 
 * **Activity Photos** — Fetches primary photos from your Strava activities.
 * **Caching** — Transient-based caching with configurable TTL to stay within Strava rate limits.
 * **Admin Settings** — Full settings page for credentials, SVG customization, display units, and sync controls.
+* **Credential Encryption** — Optional AES-256-CBC at-rest encryption for your API tokens.
+* **Configurable Sync** — Choose hourly, twice daily, or daily sync frequency.
 * **Extensible** — Filters and hooks for customizing cache TTL, SVG appearance, activity types, and more.
 
 **Example GraphQL Query:**
@@ -53,23 +61,29 @@ No data is sent until you enter your API credentials in the plugin settings. The
 
 == Installation ==
 
-1. Install and activate [WPGraphQL](https://www.wpgraphql.com/) (v2.0+).
-2. Upload the `graphql-strava-activities` folder to `/wp-content/plugins/`.
-3. Activate the plugin through the "Plugins" menu in WordPress.
-4. Go to **Strava** in the admin menu and enter your Strava API credentials.
+**Prerequisites:**
+
+This plugin requires [WPGraphQL](https://www.wpgraphql.com/) 2.0 or newer. Install and activate WPGraphQL first — without it, this plugin will display an admin notice and will not load.
+
+**Install the plugin:**
+
+1. Upload the `graphql-strava-activities` folder to `/wp-content/plugins/`, or install directly from the WordPress plugin directory.
+2. Activate the plugin through the "Plugins" menu in WordPress.
+3. Go to **Strava** in the admin menu and enter your Strava API credentials.
+4. Visit **Strava → Getting Started** for a step-by-step setup guide.
 5. Query your activities via GraphQL!
 
 **Getting Strava API Credentials:**
 
 1. Go to [Strava API Settings](https://www.strava.com/settings/api) and create an application.
 2. Copy the Client ID and Client Secret into the plugin settings.
-3. Generate an Access Token and Refresh Token using Strava's OAuth flow.
+3. Generate an Access Token and Refresh Token using Strava's OAuth flow (detailed instructions are on the Getting Started page in your WordPress admin).
 
 == Frequently Asked Questions ==
 
 = Does this require WPGraphQL? =
 
-Yes. WPGraphQL 2.0 or newer must be installed and active.
+Yes. WPGraphQL 2.0 or newer is a hard dependency — the plugin will not activate without it. WPGraphQL provides the GraphQL server that this plugin extends. Install it from [wpgraphql.com](https://www.wpgraphql.com/) or the WordPress plugin directory.
 
 = How often are activities synced? =
 
