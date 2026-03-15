@@ -3,7 +3,7 @@ Contributors: shawnazar
 Tags: graphql, strava, wpgraphql, fitness, activities
 Requires at least: 6.0
 Tested up to: 6.7
-Requires PHP: 8.0
+Requires PHP: 8.2
 Requires Plugins: wp-graphql
 Stable tag: 1.0.0
 License: MIT
