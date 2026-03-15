@@ -59,9 +59,53 @@ function wpgraphql_strava_register_types(): void {
 					'type'        => 'String',
 					'description' => __( 'URL to the primary activity photo.', 'graphql-strava-activities' ),
 				],
-				'unit'      => [
+				'unit'             => [
 					'type'        => 'String',
 					'description' => __( 'Distance unit — "mi" or "km".', 'graphql-strava-activities' ),
+				],
+				'elevationGain'    => [
+					'type'        => 'Float',
+					'description' => __( 'Total elevation gain in metres.', 'graphql-strava-activities' ),
+				],
+				'averageSpeed'     => [
+					'type'        => 'Float',
+					'description' => __( 'Average speed in metres per second.', 'graphql-strava-activities' ),
+				],
+				'maxSpeed'         => [
+					'type'        => 'Float',
+					'description' => __( 'Maximum speed in metres per second.', 'graphql-strava-activities' ),
+				],
+				'averageHeartrate' => [
+					'type'        => 'Float',
+					'description' => __( 'Average heart rate in bpm (null if no HR data).', 'graphql-strava-activities' ),
+				],
+				'maxHeartrate'     => [
+					'type'        => 'Int',
+					'description' => __( 'Maximum heart rate in bpm (null if no HR data).', 'graphql-strava-activities' ),
+				],
+				'calories'         => [
+					'type'        => 'Float',
+					'description' => __( 'Estimated calories burned (null if unavailable).', 'graphql-strava-activities' ),
+				],
+				'kudosCount'       => [
+					'type'        => 'Int',
+					'description' => __( 'Number of kudos on this activity.', 'graphql-strava-activities' ),
+				],
+				'commentCount'     => [
+					'type'        => 'Int',
+					'description' => __( 'Number of comments on this activity.', 'graphql-strava-activities' ),
+				],
+				'city'             => [
+					'type'        => 'String',
+					'description' => __( 'City where the activity started.', 'graphql-strava-activities' ),
+				],
+				'country'          => [
+					'type'        => 'String',
+					'description' => __( 'Country where the activity started.', 'graphql-strava-activities' ),
+				],
+				'isPrivate'        => [
+					'type'        => 'Boolean',
+					'description' => __( 'Whether this is a private activity.', 'graphql-strava-activities' ),
 				],
 			],
 		]
