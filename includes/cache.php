@@ -50,8 +50,17 @@ function wpgraphql_strava_get_cached_activities( int $count = 0 ): array {
 		return [];
 	}
 
-	// Fetch maximum activities from Strava (1 API call).
-	$raw_activities = wpgraphql_strava_fetch_activities( 200 );
+	/**
+	 * Filters the number of activities to fetch from Strava.
+	 *
+	 * @param int $fetch_count Number of activities to request (max 200).
+	 */
+	$fetch_count = min( (int) apply_filters( 'wpgraphql_strava_activities_to_fetch', 200 ), 200 );
+
+	/** Fires before activities are fetched from the Strava API. */
+	do_action( 'wpgraphql_strava_before_sync' );
+
+	$raw_activities = wpgraphql_strava_fetch_activities( $fetch_count );
 
 	if ( empty( $raw_activities ) ) {
 		return [];
@@ -97,6 +106,14 @@ function wpgraphql_strava_get_cached_activities( int $count = 0 ): array {
 
 	set_transient( WPGRAPHQL_STRAVA_CACHE_KEY, $activities, $ttl );
 	update_option( 'wpgraphql_strava_last_sync', time() );
+
+	/**
+	 * Fires after activities have been fetched and cached.
+	 *
+	 * @param array<int, array<string, mixed>> $activities Processed activities.
+	 * @param int                              $raw_count  Number of raw activities from Strava.
+	 */
+	do_action( 'wpgraphql_strava_after_sync', $activities, count( $raw_activities ) );
 
 	return $count > 0 ? array_slice( $activities, 0, $count ) : $activities;
 }
@@ -146,11 +163,22 @@ function wpgraphql_strava_process_activities( array $raw_activities ): array {
 			continue;
 		}
 
-		// Distance conversion.
-		$distance_raw = isset( $activity['distance'] ) ? (float) $activity['distance'] : 0.0;
-		$distance     = 'km' === $unit
-			? round( $distance_raw / 1000, 2 )
-			: round( $distance_raw / 1609.344, 2 );
+		// Distance and speed conversion.
+		$distance_raw    = isset( $activity['distance'] ) ? (float) $activity['distance'] : 0.0;
+		$avg_speed_raw   = isset( $activity['average_speed'] ) ? (float) $activity['average_speed'] : 0.0;
+		$max_speed_raw   = isset( $activity['max_speed'] ) ? (float) $activity['max_speed'] : 0.0;
+
+		if ( 'km' === $unit ) {
+			$distance  = round( $distance_raw / 1000, 2 );
+			$avg_speed = round( $avg_speed_raw * 3.6, 2 );      // m/s → km/h.
+			$max_speed = round( $max_speed_raw * 3.6, 2 );
+			$speed_unit = 'km/h';
+		} else {
+			$distance  = round( $distance_raw / 1609.344, 2 );
+			$avg_speed = round( $avg_speed_raw * 2.23694, 2 );  // m/s → mph.
+			$max_speed = round( $max_speed_raw * 2.23694, 2 );
+			$speed_unit = 'mph';
+		}
 
 		$moving_time = isset( $activity['moving_time'] ) ? (int) $activity['moving_time'] : 0;
 
@@ -173,9 +201,10 @@ function wpgraphql_strava_process_activities( array $raw_activities ): array {
 			'type'           => sanitize_text_field( $type ),
 			'photoUrl'       => esc_url_raw( $photo_url ),
 			'unit'           => $unit,
+			'speedUnit'      => $speed_unit,
 			'elevationGain'  => isset( $activity['total_elevation_gain'] ) ? round( (float) $activity['total_elevation_gain'], 1 ) : 0.0,
-			'averageSpeed'   => isset( $activity['average_speed'] ) ? round( (float) $activity['average_speed'], 2 ) : 0.0,
-			'maxSpeed'       => isset( $activity['max_speed'] ) ? round( (float) $activity['max_speed'], 2 ) : 0.0,
+			'averageSpeed'   => $avg_speed,
+			'maxSpeed'       => $max_speed,
 			'averageHeartrate' => isset( $activity['average_heartrate'] ) ? round( (float) $activity['average_heartrate'] ) : null,
 			'maxHeartrate'   => isset( $activity['max_heartrate'] ) ? (int) $activity['max_heartrate'] : null,
 			'calories'       => isset( $activity['kilojoules'] ) ? round( (float) $activity['kilojoules'] * 0.239006, 0 ) : null,

@@ -67,13 +67,17 @@ function wpgraphql_strava_register_types(): void {
 					'type'        => 'Float',
 					'description' => __( 'Total elevation gain in metres.', 'graphql-strava-activities' ),
 				],
+				'speedUnit'        => [
+					'type'        => 'String',
+					'description' => __( 'Speed unit — "mph" or "km/h".', 'graphql-strava-activities' ),
+				],
 				'averageSpeed'     => [
 					'type'        => 'Float',
-					'description' => __( 'Average speed in metres per second.', 'graphql-strava-activities' ),
+					'description' => __( 'Average speed in mph or km/h based on settings.', 'graphql-strava-activities' ),
 				],
 				'maxSpeed'         => [
 					'type'        => 'Float',
-					'description' => __( 'Maximum speed in metres per second.', 'graphql-strava-activities' ),
+					'description' => __( 'Maximum speed in mph or km/h based on settings.', 'graphql-strava-activities' ),
 				],
 				'averageHeartrate' => [
 					'type'        => 'Float',
@@ -122,22 +126,31 @@ function wpgraphql_strava_register_types(): void {
 			'type'        => [ 'list_of' => 'StravaActivity' ],
 			'description' => __( 'Recent Strava activities with route maps.', 'graphql-strava-activities' ),
 			'args'        => [
-				'first' => [
+				'first'  => [
 					'type'         => 'Int',
-					'description'  => __( 'Number of activities to return. 0 = all cached.', 'graphql-strava-activities' ),
+					'description'  => __( 'Number of activities to return (0 = all, max 200).', 'graphql-strava-activities' ),
 					'defaultValue' => 0,
 				],
-				'type'  => [
+				'offset' => [
+					'type'         => 'Int',
+					'description'  => __( 'Number of activities to skip before returning results.', 'graphql-strava-activities' ),
+					'defaultValue' => 0,
+				],
+				'type'   => [
 					'type'        => 'String',
 					'description' => __( 'Filter by activity type (e.g. "Ride", "Run").', 'graphql-strava-activities' ),
 				],
 			],
 			'resolve'     => static function ( $root, array $args ): array {
-				$count      = max( (int) ( $args['first'] ?? 0 ), 0 );
-				$activities = wpgraphql_strava_get_cached_activities( $count );
+				// Validate and clamp arguments.
+				$count  = min( max( (int) ( $args['first'] ?? 0 ), 0 ), 200 );
+				$offset = max( (int) ( $args['offset'] ?? 0 ), 0 );
 
-				// Client-side type filter.
-				$type_filter = $args['type'] ?? '';
+				// Fetch all cached activities (filtering/slicing done below).
+				$activities = wpgraphql_strava_get_cached_activities( 0 );
+
+				// Type filter.
+				$type_filter = sanitize_text_field( $args['type'] ?? '' );
 				if ( ! empty( $type_filter ) ) {
 					$activities = array_values(
 						array_filter(
@@ -145,11 +158,11 @@ function wpgraphql_strava_register_types(): void {
 							static fn( array $a ): bool => ( $a['type'] ?? '' ) === $type_filter
 						)
 					);
+				}
 
-					// Re-apply count limit after filtering.
-					if ( $count > 0 ) {
-						$activities = array_slice( $activities, 0, $count );
-					}
+				// Apply offset and count.
+				if ( $offset > 0 || $count > 0 ) {
+					$activities = array_slice( $activities, $offset, $count > 0 ? $count : null );
 				}
 
 				return $activities;
