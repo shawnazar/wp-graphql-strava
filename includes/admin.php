@@ -1117,35 +1117,58 @@ function wpgraphql_strava_render_guide_page(): void {
 			<!-- GraphQL Examples -->
 			<div class="card" style="max-width: 800px; padding: 16px 24px;">
 				<h2 style="margin-top: 8px;"><?php esc_html_e( 'GraphQL Query Examples', 'graphql-strava-activities' ); ?></h2>
+				<p style="font-size: 13px; color: #646970;"><?php esc_html_e( 'Click "Copy" to copy a query to your clipboard, then paste it into WPGraphiQL.', 'graphql-strava-activities' ); ?></p>
 
 				<h3><?php esc_html_e( 'Fetch all activities with full data', 'graphql-strava-activities' ); ?></h3>
-				<pre style="background: #f0f0f1; padding: 12px; overflow-x: auto; font-size: 13px;">{
+				<div style="position: relative;">
+					<pre class="wpgraphql-strava-query" style="background: #f0f0f1; padding: 12px; overflow-x: auto; font-size: 13px;">{
   stravaActivities {
-	title distance duration date type unit
+	title distance duration date type unit speedUnit
 	svgMap stravaUrl photoUrl
 	elevationGain averageSpeed maxSpeed
 	averageHeartrate maxHeartrate calories
 	kudosCount commentCount city country isPrivate
   }
 }</pre>
+					<button type="button" class="button button-small wpgraphql-strava-copy" style="position:absolute;top:8px;right:8px;"><?php esc_html_e( 'Copy', 'graphql-strava-activities' ); ?></button>
+				</div>
 
 				<h3><?php esc_html_e( 'Fetch latest 5 rides with performance data', 'graphql-strava-activities' ); ?></h3>
-				<pre style="background: #f0f0f1; padding: 12px; overflow-x: auto; font-size: 13px;">{
+				<div style="position: relative;">
+					<pre class="wpgraphql-strava-query" style="background: #f0f0f1; padding: 12px; overflow-x: auto; font-size: 13px;">{
   stravaActivities(first: 5, type: "Ride") {
 	title distance duration svgMap
 	elevationGain averageSpeed calories
   }
 }</pre>
+					<button type="button" class="button button-small wpgraphql-strava-copy" style="position:absolute;top:8px;right:8px;"><?php esc_html_e( 'Copy', 'graphql-strava-activities' ); ?></button>
+				</div>
 
 				<h3><?php esc_html_e( 'Fetch runs with heart rate and location', 'graphql-strava-activities' ); ?></h3>
-				<pre style="background: #f0f0f1; padding: 12px; overflow-x: auto; font-size: 13px;">{
+				<div style="position: relative;">
+					<pre class="wpgraphql-strava-query" style="background: #f0f0f1; padding: 12px; overflow-x: auto; font-size: 13px;">{
   stravaActivities(type: "Run") {
 	title distance duration date
 	averageHeartrate maxHeartrate
 	city country photoUrl stravaUrl
   }
 }</pre>
+					<button type="button" class="button button-small wpgraphql-strava-copy" style="position:absolute;top:8px;right:8px;"><?php esc_html_e( 'Copy', 'graphql-strava-activities' ); ?></button>
+				</div>
 			</div>
+
+			<script>
+			document.addEventListener( 'click', function( e ) {
+				if ( ! e.target.classList.contains( 'wpgraphql-strava-copy' ) ) return;
+				var pre = e.target.parentElement.querySelector( '.wpgraphql-strava-query' );
+				if ( ! pre ) return;
+				navigator.clipboard.writeText( pre.textContent ).then( function() {
+					var btn = e.target;
+					btn.textContent = '<?php echo esc_js( __( 'Copied!', 'graphql-strava-activities' ) ); ?>';
+					setTimeout( function() { btn.textContent = '<?php echo esc_js( __( 'Copy', 'graphql-strava-activities' ) ); ?>'; }, 2000 );
+				} );
+			} );
+			</script>
 
 			<!-- StravaActivity Fields -->
 			<div class="card" style="max-width: 800px; padding: 16px 24px;">

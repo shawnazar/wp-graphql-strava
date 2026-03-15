@@ -310,6 +310,7 @@ class GraphQLTest extends TestCase {
 			'type',
 			'photoUrl',
 			'unit',
+			'speedUnit',
 			'elevationGain',
 			'averageSpeed',
 			'maxSpeed',
@@ -324,7 +325,7 @@ class GraphQLTest extends TestCase {
 			'poweredByStrava',
 		];
 
-		$this->assertCount( 21, $fields, 'StravaActivity should have exactly 21 fields.' );
+		$this->assertCount( 22, $fields, 'StravaActivity should have exactly 22 fields.' );
 
 		foreach ( $expected_fields as $field_name ) {
 			$this->assertArrayHasKey( $field_name, $fields, "Missing field: {$field_name}" );

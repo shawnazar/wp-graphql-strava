@@ -80,7 +80,7 @@ that depend on them. The bootstrap file handles this.
 
 ## GraphQL Fields
 
-The `StravaActivity` type exposes 21 fields. All come from the Strava list endpoint
+The `StravaActivity` type exposes 22 fields. All come from the Strava list endpoint
 (no extra API calls needed):
 
 | Field | Type | Source |
@@ -95,8 +95,9 @@ The `StravaActivity` type exposes 21 fields. All come from the Strava list endpo
 | stravaUrl | String | `id` (constructed URL) |
 | photoUrl | String | `photos.primary.urls` |
 | elevationGain | Float | `total_elevation_gain` (metres) |
-| averageSpeed | Float | `average_speed` (m/s) |
-| maxSpeed | Float | `max_speed` (m/s) |
+| speedUnit | String | Setting ("mph" or "km/h") |
+| averageSpeed | Float | `average_speed` (converted to mph/km/h) |
+| maxSpeed | Float | `max_speed` (converted to mph/km/h) |
 | averageHeartrate | Float | `average_heartrate` (nullable) |
 | maxHeartrate | Int | `max_heartrate` (nullable) |
 | calories | Float | `kilojoules` × 0.239 (nullable) |

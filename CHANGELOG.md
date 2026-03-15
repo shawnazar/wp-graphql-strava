@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Connection Status card on Settings page with token expiry date and status indicator
 - Token health admin notice on plugin pages when credentials are missing or expired
 - Specific API error descriptions (401, 403, 429, 5xx) replacing generic "API returned status" messages
+- `offset` argument for GraphQL `stravaActivities` query for pagination
+- `speedUnit` GraphQL field ("mph" or "km/h") matching the distance unit setting
+- Speed fields (`averageSpeed`, `maxSpeed`) now converted to match distance unit (mph or km/h)
+- `wpgraphql_strava_before_sync` and `wpgraphql_strava_after_sync` action hooks
+- `wpgraphql_strava_activities_to_fetch` filter (default 200, max 200)
+- Copy-to-clipboard buttons on GraphQL query examples in Getting Started page
+- Input validation: `first` clamped to 0-200, `offset` validated, `type` sanitized
 
 ## [1.0.3] - 2026-03-15
 
