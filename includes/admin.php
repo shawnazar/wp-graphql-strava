@@ -56,6 +56,15 @@ function wpgraphql_strava_add_admin_menu(): void {
 
 	add_submenu_page(
 		'wpgraphql-strava',
+		__( 'Activities', 'graphql-strava-activities' ),
+		__( 'Activities', 'graphql-strava-activities' ),
+		'manage_options',
+		'wpgraphql-strava-activities',
+		'wpgraphql_strava_render_activities_page'
+	);
+
+	add_submenu_page(
+		'wpgraphql-strava',
 		__( 'Preview', 'graphql-strava-activities' ),
 		__( 'Preview', 'graphql-strava-activities' ),
 		'manage_options',
@@ -506,6 +515,40 @@ function wpgraphql_strava_handle_resync(): void {
 }
 
 // ------------------------------------------------------------------
+// Shared footer.
+// ------------------------------------------------------------------
+
+/**
+ * Render the plugin footer with author links.
+ *
+ * @return void
+ */
+function wpgraphql_strava_render_admin_footer(): void {
+	?>
+	<hr />
+	<div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #646970; margin-top: 8px;">
+		<span>
+			<?php
+			printf(
+				/* translators: %s: Author website link */
+				esc_html__( 'Built by %s', 'graphql-strava-activities' ),
+				'<a href="https://shawnazar.me" target="_blank" rel="noopener noreferrer">Shawn Azar</a>'
+			);
+			?>
+		</span>
+		<span>&middot;</span>
+		<a href="https://www.buymeacoffee.com/shawnazar" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Buy Me a Coffee', 'graphql-strava-activities' ); ?></a>
+		<span>&middot;</span>
+		<a href="https://github.com/shawnazar/wp-graphql-strava" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'GitHub', 'graphql-strava-activities' ); ?></a>
+		<span>&middot;</span>
+		<a href="https://github.com/shawnazar/wp-graphql-strava/issues" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Report an Issue', 'graphql-strava-activities' ); ?></a>
+		<span>&middot;</span>
+		<a href="https://github.com/shawnazar/wp-graphql-strava/discussions" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Discussions', 'graphql-strava-activities' ); ?></a>
+	</div>
+	<?php
+}
+
+// ------------------------------------------------------------------
 // Page renderer.
 // ------------------------------------------------------------------
 
@@ -623,28 +666,7 @@ function wpgraphql_strava_render_admin_page(): void {
 			<?php esc_html_e( 'Each sync: 1 list call + up to 5 detail calls for photos, with a 200 ms delay between detail calls. Manual resyncs count toward the same limits.', 'graphql-strava-activities' ); ?>
 		</p>
 
-		<hr />
-
-		<!-- Plugin Info -->
-		<div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: #646970; margin-top: 8px;">
-			<span>
-				<?php
-				printf(
-					/* translators: %s: Author website link */
-					esc_html__( 'Built by %s', 'graphql-strava-activities' ),
-					'<a href="https://shawnazar.me" target="_blank" rel="noopener noreferrer">Shawn Azar</a>'
-				);
-				?>
-			</span>
-			<span>&middot;</span>
-			<a href="https://www.buymeacoffee.com/shawnazar" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Buy Me a Coffee', 'graphql-strava-activities' ); ?></a>
-			<span>&middot;</span>
-			<a href="https://github.com/shawnazar/wp-graphql-strava" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'GitHub', 'graphql-strava-activities' ); ?></a>
-			<span>&middot;</span>
-			<a href="https://github.com/shawnazar/wp-graphql-strava/issues" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Report an Issue', 'graphql-strava-activities' ); ?></a>
-			<span>&middot;</span>
-			<a href="https://github.com/shawnazar/wp-graphql-strava/discussions" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Discussions', 'graphql-strava-activities' ); ?></a>
-		</div>
+		<?php wpgraphql_strava_render_admin_footer(); ?>
 	</div>
 	<?php
 }
@@ -914,6 +936,8 @@ function wpgraphql_strava_render_guide_page(): void {
 				</p>
 			</div>
 
+			<?php wpgraphql_strava_render_admin_footer(); ?>
+
 		</div>
 	</div>
 	<?php
@@ -1171,7 +1195,52 @@ function wpgraphql_strava_render_preview_page(): void {
 				</div>
 			<?php endif; ?>
 
+			<?php wpgraphql_strava_render_admin_footer(); ?>
+
 		</div>
+	</div>
+	<?php
+}
+
+// ------------------------------------------------------------------
+// Activities list page.
+// ------------------------------------------------------------------
+
+/**
+ * Render the Activities admin page with WP_List_Table.
+ *
+ * @return void
+ */
+function wpgraphql_strava_render_activities_page(): void {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$table = new WPGRAPHQL_Strava_Activities_List_Table();
+	$table->prepare_items();
+
+	$total = $table->get_pagination_arg( 'total_items' );
+	?>
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Strava Activities', 'graphql-strava-activities' ); ?></h1>
+		<span style="color:#646970;margin-left:8px;">
+			<?php
+			printf(
+				/* translators: %d: Total number of cached activities */
+				esc_html__( '%d cached', 'graphql-strava-activities' ),
+				(int) $total
+			);
+			?>
+		</span>
+
+		<hr class="wp-header-end" />
+
+		<form method="get">
+			<input type="hidden" name="page" value="wpgraphql-strava-activities" />
+			<?php $table->display(); ?>
+		</form>
+
+		<?php wpgraphql_strava_render_admin_footer(); ?>
 	</div>
 	<?php
 }

@@ -1,0 +1,267 @@
+<?php
+/**
+ * Activities list table for the admin.
+ *
+ * Extends WP_List_Table to display cached Strava activities
+ * with pagination, sorting, and type filtering.
+ *
+ * @package WPGraphQL\Strava
+ */
+
+declare(strict_types=1);
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
+
+/**
+ * Strava Activities List Table.
+ */
+class WPGRAPHQL_Strava_Activities_List_Table extends WP_List_Table {
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		parent::__construct(
+			[
+				'singular' => 'strava-activity',
+				'plural'   => 'strava-activities',
+				'ajax'     => false,
+			]
+		);
+	}
+
+	/**
+	 * Define table columns.
+	 *
+	 * @return array<string, string>
+	 */
+	public function get_columns(): array {
+		return [
+			'title'    => __( 'Title', 'graphql-strava-activities' ),
+			'type'     => __( 'Type', 'graphql-strava-activities' ),
+			'distance' => __( 'Distance', 'graphql-strava-activities' ),
+			'duration' => __( 'Duration', 'graphql-strava-activities' ),
+			'date'     => __( 'Date', 'graphql-strava-activities' ),
+			'route'    => __( 'Route', 'graphql-strava-activities' ),
+			'photo'    => __( 'Photo', 'graphql-strava-activities' ),
+			'strava'   => __( 'Strava', 'graphql-strava-activities' ),
+		];
+	}
+
+	/**
+	 * Define sortable columns.
+	 *
+	 * @return array<string, array<int, string|bool>>
+	 */
+	public function get_sortable_columns(): array {
+		return [
+			'title'    => [ 'title', false ],
+			'type'     => [ 'type', false ],
+			'distance' => [ 'distance', false ],
+			'date'     => [ 'date', true ],
+		];
+	}
+
+	/**
+	 * Prepare items for display.
+	 *
+	 * @return void
+	 */
+	public function prepare_items(): void {
+		$activities = wpgraphql_strava_get_cached_activities( 0 );
+
+		// Type filter.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter.
+		$type_filter = isset( $_GET['activity_type'] ) ? sanitize_text_field( wp_unslash( $_GET['activity_type'] ) ) : '';
+		if ( ! empty( $type_filter ) ) {
+			$activities = array_values(
+				array_filter(
+					$activities,
+					static fn( array $a ): bool => ( $a['type'] ?? '' ) === $type_filter
+				)
+			);
+		}
+
+		// Sorting.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only sort params.
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'date';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$order = isset( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'desc';
+
+		usort(
+			$activities,
+			static function ( array $a, array $b ) use ( $orderby, $order ): int {
+				$val_a = $a[ $orderby ] ?? '';
+				$val_b = $b[ $orderby ] ?? '';
+
+				if ( is_numeric( $val_a ) && is_numeric( $val_b ) ) {
+					$result = (float) $val_a <=> (float) $val_b;
+				} else {
+					$result = strnatcasecmp( (string) $val_a, (string) $val_b );
+				}
+
+				return 'asc' === $order ? $result : -$result;
+			}
+		);
+
+		// Pagination.
+		$per_page    = 20;
+		$total_items = count( $activities );
+		$current     = $this->get_pagenum();
+		$offset      = ( $current - 1 ) * $per_page;
+
+		$this->items = array_slice( $activities, $offset, $per_page );
+
+		$this->set_pagination_args(
+			[
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => (int) ceil( $total_items / $per_page ),
+			]
+		);
+
+		$this->_column_headers = [
+			$this->get_columns(),
+			[],
+			$this->get_sortable_columns(),
+		];
+	}
+
+	/**
+	 * Default column renderer.
+	 *
+	 * @param array<string, mixed> $item        Activity data.
+	 * @param string               $column_name Column key.
+	 * @return string Cell content.
+	 */
+	public function column_default( $item, $column_name ): string {
+		return esc_html( (string) ( $item[ $column_name ] ?? '' ) );
+	}
+
+	/**
+	 * Title column.
+	 *
+	 * @param array<string, mixed> $item Activity data.
+	 * @return string Cell content.
+	 */
+	public function column_title( array $item ): string {
+		$title = esc_html( $item['title'] ?? '' );
+
+		if ( ! empty( $item['isPrivate'] ) ) {
+			$title .= ' <span style="background:#fef3c7;color:#92400e;font-size:11px;padding:1px 6px;border-radius:9999px;">' . esc_html__( 'Private', 'graphql-strava-activities' ) . '</span>';
+		}
+
+		return $title;
+	}
+
+	/**
+	 * Distance column — includes unit.
+	 *
+	 * @param array<string, mixed> $item Activity data.
+	 * @return string Cell content.
+	 */
+	public function column_distance( array $item ): string {
+		return esc_html( (string) ( $item['distance'] ?? '0' ) ) . ' ' . esc_html( $item['unit'] ?? 'mi' );
+	}
+
+	/**
+	 * Date column — formatted.
+	 *
+	 * @param array<string, mixed> $item Activity data.
+	 * @return string Cell content.
+	 */
+	public function column_date( array $item ): string {
+		if ( empty( $item['date'] ) ) {
+			return '—';
+		}
+		$ts = strtotime( $item['date'] );
+		return $ts ? esc_html( wp_date( 'M j, Y g:i A', $ts ) ) : esc_html( $item['date'] );
+	}
+
+	/**
+	 * Route column — shows check or dash.
+	 *
+	 * @param array<string, mixed> $item Activity data.
+	 * @return string Cell content.
+	 */
+	public function column_route( array $item ): string {
+		return ! empty( $item['svgMap'] )
+			? '<span style="color:#16a34a;" title="' . esc_attr__( 'Has route map', 'graphql-strava-activities' ) . '">&#10003;</span>'
+			: '<span style="color:#9ca3af;">—</span>';
+	}
+
+	/**
+	 * Photo column — shows thumbnail or dash.
+	 *
+	 * @param array<string, mixed> $item Activity data.
+	 * @return string Cell content.
+	 */
+	public function column_photo( array $item ): string {
+		if ( empty( $item['photoUrl'] ) ) {
+			return '<span style="color:#9ca3af;">—</span>';
+		}
+
+		return '<img src="' . esc_url( $item['photoUrl'] ) . '" alt="' . esc_attr__( 'Activity photo', 'graphql-strava-activities' ) . '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;" />';
+	}
+
+	/**
+	 * Strava link column.
+	 *
+	 * @param array<string, mixed> $item Activity data.
+	 * @return string Cell content.
+	 */
+	public function column_strava( array $item ): string {
+		if ( empty( $item['stravaUrl'] ) ) {
+			return '—';
+		}
+
+		return '<a href="' . esc_url( $item['stravaUrl'] ) . '" target="_blank" rel="noopener noreferrer" style="color:#FC5200;font-weight:bold;text-decoration:none;">' . esc_html__( 'View', 'graphql-strava-activities' ) . ' &rarr;</a>';
+	}
+
+	/**
+	 * Display when no items found.
+	 *
+	 * @return void
+	 */
+	public function no_items(): void {
+		esc_html_e( 'No activities found. Sync your Strava data from the Settings page.', 'graphql-strava-activities' );
+	}
+
+	/**
+	 * Extra controls above and below the table — type filter dropdown.
+	 *
+	 * @param string $which Top or bottom.
+	 * @return void
+	 */
+	protected function extra_tablenav( $which ): void {
+		if ( 'top' !== $which ) {
+			return;
+		}
+
+		$activities = wpgraphql_strava_get_cached_activities( 0 );
+		$types      = array_unique( array_column( $activities, 'type' ) );
+		sort( $types );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current_type = isset( $_GET['activity_type'] ) ? sanitize_text_field( wp_unslash( $_GET['activity_type'] ) ) : '';
+		?>
+		<div class="alignleft actions">
+			<select name="activity_type">
+				<option value=""><?php esc_html_e( 'All Types', 'graphql-strava-activities' ); ?></option>
+				<?php foreach ( $types as $type ) : ?>
+					<option value="<?php echo esc_attr( $type ); ?>" <?php selected( $current_type, $type ); ?>>
+						<?php echo esc_html( $type ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+			<?php submit_button( __( 'Filter', 'graphql-strava-activities' ), '', 'filter_action', false ); ?>
+		</div>
+		<?php
+	}
+}
