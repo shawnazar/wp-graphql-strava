@@ -19,7 +19,8 @@
     "phpunit/phpunit": "^9.6",
     "yoast/phpunit-polyfills": "^2.0",
     "wp-phpunit/wp-phpunit": "^6.0",
-    "brain/monkey": "^2.6"
+    "brain/monkey": "^2.6",
+    "phpro/grumphp": "^2.19"
   },
   "autoload-dev": {
     "psr-4": {
@@ -28,7 +29,8 @@
   },
   "config": {
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpro/grumphp": true
     }
   },
   "scripts": {
