@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**WPGraphQL for Strava** is an open-source WordPress plugin that extends WPGraphQL
+**GraphQL Strava Activities** is an open-source WordPress plugin that extends WPGraphQL
 with Strava activity data. It provides server-side SVG route map generation, activity
 photo fetching, and structured GraphQL types — no JavaScript map libraries required.
 
@@ -19,9 +19,49 @@ It should work for any headless WordPress site using WPGraphQL, not just shawnaz
 | WordPress | 6.0+ |
 | Dependency | WPGraphQL 2.0+ |
 | License | MIT |
-| Text domain | `wp-graphql-strava` |
+| Plugin name | `GraphQL Strava Activities` |
+| WordPress.org slug | `graphql-strava-activities` |
+| Text domain | `graphql-strava-activities` |
 | Function prefix | `wpgraphql_strava_` |
 | Option prefix | `wpgraphql_strava_` |
+
+## Workflow
+
+Every task starts with a GitHub issue. Issues #1-#8 track the initial build:
+
+| # | Title | Status |
+|---|-------|--------|
+| 1 | Initial plugin scaffold | Done |
+| 2 | Strava API client | Done |
+| 3 | Caching — transient storage, photo fetching | Done |
+| 4 | Polyline decoder and SVG route map generator | Done |
+| 5 | GraphQL schema — StravaActivity type and query | Done |
+| 6 | Admin settings page | Done |
+| 7 | Community docs — README, CONTRIBUTING, etc. | Open |
+| 8 | WordPress.org plugin directory submission | Done |
+
+### Branch & PR Process
+
+1. **Start from a GitHub issue** — every piece of work maps to an issue.
+2. **Create a feature branch from main:**
+   - `feat/[issue-number]-[short-description]` for new features
+   - `fix/[issue-number]-[short-description]` for bug fixes
+3. **Commit with descriptive messages** that include `Closes #N` to auto-close the issue on merge.
+4. **Push the branch and create a PR** via `gh pr create`, linked to the issue.
+5. **Merge to main** after the PR is created.
+6. **Document decisions** as comments on the GitHub issue when making architectural choices.
+
+### Example
+
+```bash
+git checkout -b feat/9-pagination-support
+# ... make changes ...
+git commit -m "feat: add cursor-based pagination to stravaActivities query
+
+Closes #9"
+git push -u origin feat/9-pagination-support
+gh pr create --title "Add cursor-based pagination" --body "Closes #9\n\n## Summary\n..."
+```
 
 ## Architecture
 
@@ -29,25 +69,28 @@ It should work for any headless WordPress site using WPGraphQL, not just shawnaz
 wp-graphql-strava/
 ├── wp-graphql-strava.php       # Plugin bootstrap, dependency check, cron
 ├── includes/
-│   ├── admin.php               # WP Admin settings page (credentials, SVG, display, rate limits)
+│   ├── admin.php               # WP Admin settings + Getting Started guide page
 │   ├── api.php                 # Strava API client (list activities, detail, token refresh)
 │   ├── cache.php               # Transient caching with configurable TTL
+│   ├── encryption.php          # Optional AES-256-CBC at-rest credential encryption
 │   ├── graphql.php             # WPGraphQL type + query registration
 │   ├── polyline.php            # Google encoded polyline decoder
 │   └── svg.php                 # Polyline → SVG route map generator
+├── .github/
+│   ├── dependabot.yml          # Weekly Composer + Actions dependency updates
+│   └── workflows/
+│       └── deploy.yml          # Auto-deploy to WordPress.org SVN on tag push
 ├── LICENSE                     # MIT
-├── README.md                   # User-facing documentation
-├── CONTRIBUTING.md             # Contributor guidelines
-├── CODE_OF_CONDUCT.md          # Contributor Covenant v2.1
-├── SECURITY.md                 # Vulnerability reporting
-├── CHANGELOG.md                # Version history
+├── readme.txt                  # WordPress.org plugin readme
+├── composer.json               # WPCS dev dependencies, lint scripts
+├── phpcs.xml.dist              # WordPress coding standards config
+├── .editorconfig               # Consistent formatting across editors
 ├── .gitignore
 └── .distignore                 # Files excluded from release zip
 ```
 
-## Key Features to Implement
+## GraphQL Schema
 
-### GraphQL Schema
 ```graphql
 type StravaActivity {
   title: String
@@ -66,48 +109,49 @@ type Query {
 }
 ```
 
-### Admin Settings (under "Strava" top-level menu)
+## Admin Settings (under "Strava" top-level menu)
 - **Credentials**: Client ID, Client Secret, Access Token, Refresh Token
-- **SVG Customization**: stroke color, stroke width (with defaults)
-- **Display**: units (miles/km), activity types to include
+- **SVG Customization**: stroke color (picker), stroke width
+- **Display**: units (miles/km), sync frequency (hourly/twice daily/daily)
 - **Sync**: resync button, last sync time, cached count, rate limit info
+- **Getting Started**: submenu page with setup guide, GraphQL examples, hooks reference
 
-### Filters & Hooks (extensibility)
+## Filters & Hooks (extensibility)
+
 All filters use `wpgraphql_strava_` prefix:
 - `wpgraphql_strava_cache_ttl` — cache duration (default 12 hours)
 - `wpgraphql_strava_svg_color` — SVG stroke color
 - `wpgraphql_strava_svg_stroke_width` — SVG stroke width
+- `wpgraphql_strava_svg_attributes` — extra SVG element attributes
 - `wpgraphql_strava_activities` — filter processed activities before caching
 - `wpgraphql_strava_activity_types` — allowed activity types
 
 ## Code Style
 
-- PHP: 4 spaces indent, WordPress coding standards
+- PHP: 4 spaces indent, WordPress coding standards (WPCS 3.0)
+- `declare(strict_types=1)` in every file
 - PHPDoc on every function
 - All user input sanitized, all output escaped
 - Nonces on all forms
-- Text domain: `wp-graphql-strava` for all translatable strings
+- Text domain: `graphql-strava-activities` for all translatable strings
+- Lint: `composer lint` / `composer lint:fix`
 
 ## Security Rules
 
-- Never store API tokens in code — only in WP options (database)
+- Credentials optionally encrypted at rest (AES-256-CBC) via `GRAPHQL_STRAVA_ENCRYPTION_KEY` constant
+- Sensitive options use `wpgraphql_strava_get_option()` / `wpgraphql_strava_update_option()` helpers
 - All admin pages check `current_user_can('manage_options')`
 - All form submissions verify nonces
 - All option values sanitized on save
 - No direct file access (ABSPATH check at top of every file)
 - Rate limit API calls (200ms delay between detail calls)
-- Document all data flows in SECURITY.md
 
 ## Publishing to WordPress.org
 
-To submit to the WordPress plugin directory:
-1. Plugin must follow WordPress coding standards
-2. Must use `sanitize_*`, `esc_*`, and `wp_nonce_*` properly
-3. No external CDN dependencies (all assets bundled)
-4. Must have a readme.txt (WordPress format, not GitHub markdown)
-5. Submit at https://wordpress.org/plugins/developers/add/
-6. Review process takes 1-7 days
-7. After approval, use SVN to deploy updates
+- Plugin slug: `graphql-strava-activities` (no trademark at the front)
+- `readme.txt` includes Third-Party Service disclosure (Guideline 7)
+- On git tag push, `.github/workflows/deploy.yml` auto-deploys to SVN
+- SVN credentials stored as GitHub Secrets (`SVN_USERNAME`, `SVN_PASSWORD`)
 
 ## Relationship to shawnazar-me-ts
 
@@ -120,6 +164,10 @@ project should switch to using this plugin instead.
 
 ```bash
 # No build step needed — pure PHP plugin
+composer install        # Install dev dependencies (WPCS)
+composer lint           # Run PHP_CodeSniffer
+composer lint:fix       # Auto-fix coding standard issues
+
 # For development, mount in Docker:
 # docker-compose volume: ./:/var/www/html/wp-content/plugins/wp-graphql-strava
 ```
