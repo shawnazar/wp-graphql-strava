@@ -5,7 +5,7 @@
 [![WordPress 6.0+](https://img.shields.io/badge/WordPress-6.0%2B-21759B.svg)](https://wordpress.org/)
 [![WPGraphQL 2.0+](https://img.shields.io/badge/WPGraphQL-2.0%2B-4B32C3.svg)](https://www.wpgraphql.com/)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-orange.svg)](https://www.buymeacoffee.com/shawnazar)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://shawnazar.github.io/wp-graphql-strava/)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://shawnazar.github.io/graphql-strava-activities/)
 
 Compatible with Strava — a WordPress plugin that extends [WPGraphQL](https://www.wpgraphql.com/) with activity data, server-side SVG route maps, and photos. No JavaScript map libraries required.
 
@@ -36,7 +36,7 @@ Compatible with Strava — a WordPress plugin that extends [WPGraphQL](https://w
 
 ```bash
 cd wp-content/plugins/
-git clone https://github.com/shawnazar/wp-graphql-strava.git graphql-strava-activities
+git clone https://github.com/shawnazar/graphql-strava-activities.git graphql-strava-activities
 ```
 
 Activate in WordPress, then visit **Strava** in the admin menu.

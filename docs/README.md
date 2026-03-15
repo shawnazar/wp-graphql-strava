@@ -44,6 +44,6 @@ Use the sidebar to navigate the full documentation, covering everything from ini
 
 ## Links
 
-- [GitHub Repository](https://github.com/shawnazar/wp-graphql-strava)
-- [Report an Issue](https://github.com/shawnazar/wp-graphql-strava/issues)
-- [Discussions](https://github.com/shawnazar/wp-graphql-strava/discussions)
+- [GitHub Repository](https://github.com/shawnazar/graphql-strava-activities)
+- [Report an Issue](https://github.com/shawnazar/graphql-strava-activities/issues)
+- [Discussions](https://github.com/shawnazar/graphql-strava-activities/discussions)

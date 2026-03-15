@@ -1,5 +1,5 @@
 {
-  "name": "shawnazar/wp-graphql-strava",
+  "name": "shawnazar/graphql-strava-activities",
   "description": "GraphQL Strava Activities — extends WPGraphQL with Strava activity data and server-side SVG route maps.",
   "type": "wordpress-plugin",
   "license": "MIT",

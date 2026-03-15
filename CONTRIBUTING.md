@@ -4,7 +4,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 ## Reporting Bugs
 
-1. Search [existing issues](https://github.com/shawnazar/wp-graphql-strava/issues) to avoid duplicates.
+1. Search [existing issues](https://github.com/shawnazar/graphql-strava-activities/issues) to avoid duplicates.
 2. Open a new issue with:
    - WordPress, PHP, and WPGraphQL versions
    - Steps to reproduce
@@ -13,7 +13,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 ## Suggesting Features
 
-Open a [GitHub issue](https://github.com/shawnazar/wp-graphql-strava/issues/new) describing:
+Open a [GitHub issue](https://github.com/shawnazar/graphql-strava-activities/issues/new) describing:
 - What you'd like to see
 - Why it would be useful
 - Any implementation ideas
@@ -24,7 +24,7 @@ Open a [GitHub issue](https://github.com/shawnazar/wp-graphql-strava/issues/new)
 2. Mount the plugin in a local WordPress environment:
    ```bash
    cd wp-content/plugins/
-   git clone https://github.com/YOUR-USERNAME/wp-graphql-strava.git graphql-strava-activities
+   git clone https://github.com/YOUR-USERNAME/graphql-strava-activities.git graphql-strava-activities
    ```
 3. Install dev dependencies:
    ```bash

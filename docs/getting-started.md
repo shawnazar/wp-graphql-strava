@@ -12,7 +12,7 @@ This guide walks you through installing the plugin, connecting your Strava accou
 
 ### From WordPress Admin
 
-1. Download the plugin zip from [GitHub Releases](https://github.com/shawnazar/wp-graphql-strava/releases)
+1. Download the plugin zip from [GitHub Releases](https://github.com/shawnazar/graphql-strava-activities/releases)
 2. Go to **Plugins → Add New → Upload Plugin**
 3. Upload the zip and click **Install Now**
 4. Activate the plugin
@@ -21,7 +21,7 @@ This guide walks you through installing the plugin, connecting your Strava accou
 
 ```bash
 cd wp-content/plugins/
-git clone https://github.com/shawnazar/wp-graphql-strava.git graphql-strava-activities
+git clone https://github.com/shawnazar/graphql-strava-activities.git graphql-strava-activities
 ```
 
 Activate in **Plugins** menu.

@@ -5,7 +5,7 @@
 1. Fork and clone the repository:
    ```bash
    cd wp-content/plugins/
-   git clone https://github.com/YOUR-USERNAME/wp-graphql-strava.git graphql-strava-activities
+   git clone https://github.com/YOUR-USERNAME/graphql-strava-activities.git graphql-strava-activities
    ```
 2. Install dev dependencies:
    ```bash
@@ -69,7 +69,7 @@ If any task fails, the commit is blocked.
 
 ## Reporting Bugs
 
-Open a [GitHub issue](https://github.com/shawnazar/wp-graphql-strava/issues) with:
+Open a [GitHub issue](https://github.com/shawnazar/graphql-strava-activities/issues) with:
 - WordPress, PHP, and WPGraphQL versions
 - Steps to reproduce
 - Expected vs actual behaviour

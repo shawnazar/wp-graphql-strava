@@ -4,5 +4,5 @@
 # Security-sensitive files require explicit review
 includes/encryption.php @shawnazar
 includes/api.php @shawnazar
-wp-graphql-strava.php @shawnazar
+graphql-strava-activities.php @shawnazar
 .github/workflows/ @shawnazar
