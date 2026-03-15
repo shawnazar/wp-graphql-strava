@@ -3,7 +3,7 @@
     <description>WordPress Coding Standards for GraphQL Strava Activities.</description>
 
     <!-- Scan these files -->
-    <file>wp-graphql-strava.php</file>
+    <file>graphql-strava-activities.php</file>
     <file>includes/</file>
 
     <!-- Exclude stubs and tests from scanning -->

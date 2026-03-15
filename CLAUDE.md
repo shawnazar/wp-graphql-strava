@@ -27,7 +27,7 @@ Strava activity data, server-side SVG route maps, and activity photos.
 ## Architecture
 
 ```
-wp-graphql-strava.php          # Bootstrap, dependency check, cron scheduling
+graphql-strava-activities.php          # Bootstrap, dependency check, cron scheduling
 includes/
 ├── encryption.php             # Optional AES-256-CBC credential encryption
 ├── polyline.php               # Google encoded polyline → [lat, lng] decoder

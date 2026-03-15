@@ -3,7 +3,7 @@
 ## File Structure
 
 ```
-wp-graphql-strava.php          # Bootstrap, dependency check, cron scheduling
+graphql-strava-activities.php          # Bootstrap, dependency check, cron scheduling
 includes/
 ├── encryption.php             # Optional AES-256-CBC credential encryption
 ├── polyline.php               # Google encoded polyline → [lat, lng] decoder
@@ -18,7 +18,7 @@ includes/
 
 ## Load Order
 
-Load order matters — `encryption.php` and `polyline.php` must load before modules that depend on them. The bootstrap file (`wp-graphql-strava.php`) handles this:
+Load order matters — `encryption.php` and `polyline.php` must load before modules that depend on them. The bootstrap file (`graphql-strava-activities.php`) handles this:
 
 1. `encryption.php` — needed by api.php and admin.php for credential access
 2. `polyline.php` — needed by svg.php for polyline decoding

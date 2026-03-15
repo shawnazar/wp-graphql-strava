@@ -4,7 +4,7 @@
 
 1. Update `CHANGELOG.md` — move items from `[Unreleased]` to a new version section
 2. Update the version number in:
-   - `wp-graphql-strava.php` (plugin header `Version:` and `WPGRAPHQL_STRAVA_VERSION` constant)
+   - `graphql-strava-activities.php` (plugin header `Version:` and `WPGRAPHQL_STRAVA_VERSION` constant)
    - `readme.txt` (`Stable tag:`)
 3. Commit: `git commit -m "release: v1.2.0"`
 4. Tag: `git tag v1.2.0`

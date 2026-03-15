@@ -13,7 +13,7 @@ composer analyse
 PHPStan is configured in `phpstan.neon.dist`:
 
 - **Level**: 5
-- **Paths**: `wp-graphql-strava.php`, `includes/`
+- **Paths**: `graphql-strava-activities.php`, `includes/`
 - **WordPress extension**: Provides stubs for WordPress functions, hooks, and globals
 - **Custom stubs**: Located in `stubs/` for any additional function declarations
 

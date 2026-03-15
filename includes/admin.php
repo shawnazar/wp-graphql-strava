@@ -545,11 +545,11 @@ function wpgraphql_strava_render_admin_footer(): void {
 		<span>&middot;</span>
 		<a href="https://www.buymeacoffee.com/shawnazar" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Buy Me a Coffee', 'graphql-strava-activities' ); ?></a>
 		<span>&middot;</span>
-		<a href="https://github.com/shawnazar/wp-graphql-strava" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'GitHub', 'graphql-strava-activities' ); ?></a>
+		<a href="https://github.com/shawnazar/graphql-strava-activities" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'GitHub', 'graphql-strava-activities' ); ?></a>
 		<span>&middot;</span>
-		<a href="https://github.com/shawnazar/wp-graphql-strava/issues" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Report an Issue', 'graphql-strava-activities' ); ?></a>
+		<a href="https://github.com/shawnazar/graphql-strava-activities/issues" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Report an Issue', 'graphql-strava-activities' ); ?></a>
 		<span>&middot;</span>
-		<a href="https://github.com/shawnazar/wp-graphql-strava/discussions" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Discussions', 'graphql-strava-activities' ); ?></a>
+		<a href="https://github.com/shawnazar/graphql-strava-activities/discussions" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Discussions', 'graphql-strava-activities' ); ?></a>
 		<span>&middot;</span>
 		<span>
 			<?php
