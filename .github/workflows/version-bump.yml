@@ -69,6 +69,11 @@ jobs:
             exit 1
           fi
 
+      - name: Clean up stale release branch
+        run: |
+          NEXT="${{ steps.version.outputs.next }}"
+          git push origin --delete "release/${NEXT}" 2>/dev/null || true
+
       - name: Create release branch
         run: |
           NEXT="${{ steps.version.outputs.next }}"
