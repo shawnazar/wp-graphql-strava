@@ -24,23 +24,34 @@ add_action( 'admin_init', 'wpgraphql_strava_handle_resync' );
  * @return void
  */
 function wpgraphql_strava_add_admin_menu(): void {
+	// Top-level menu points to Getting Started.
 	add_menu_page(
-		__( 'Strava Settings', 'graphql-strava-activities' ),
+		__( 'Getting Started', 'graphql-strava-activities' ),
 		__( 'Strava', 'graphql-strava-activities' ),
 		'manage_options',
 		'wpgraphql-strava',
-		'wpgraphql_strava_render_admin_page',
+		'wpgraphql_strava_render_guide_page',
 		'dashicons-chart-line',
 		81
 	);
 
+	// Rename the auto-generated first submenu from "Strava" to "Getting Started".
 	add_submenu_page(
 		'wpgraphql-strava',
 		__( 'Getting Started', 'graphql-strava-activities' ),
 		__( 'Getting Started', 'graphql-strava-activities' ),
 		'manage_options',
-		'wpgraphql-strava-guide',
+		'wpgraphql-strava',
 		'wpgraphql_strava_render_guide_page'
+	);
+
+	add_submenu_page(
+		'wpgraphql-strava',
+		__( 'Strava Settings', 'graphql-strava-activities' ),
+		__( 'Settings', 'graphql-strava-activities' ),
+		'manage_options',
+		'wpgraphql-strava-settings',
+		'wpgraphql_strava_render_admin_page'
 	);
 
 	add_submenu_page(
@@ -73,7 +84,7 @@ function wpgraphql_strava_register_settings(): void {
 				esc_html__( 'Strava API Settings', 'graphql-strava-activities' )
 			);
 		},
-		'wpgraphql-strava'
+		'wpgraphql-strava-settings'
 	);
 
 	$credential_fields = [
@@ -104,7 +115,7 @@ function wpgraphql_strava_register_settings(): void {
 			$option,
 			$label,
 			'wpgraphql_strava_render_text_field',
-			'wpgraphql-strava',
+			'wpgraphql-strava-settings',
 			'wpgraphql_strava_credentials',
 			[
 				'option' => $option,
@@ -133,7 +144,7 @@ function wpgraphql_strava_register_settings(): void {
 		static function (): void {
 			echo '<p>' . esc_html__( 'Customise the appearance of the server-rendered route maps.', 'graphql-strava-activities' ) . '</p>';
 		},
-		'wpgraphql-strava'
+		'wpgraphql-strava-settings'
 	);
 
 	register_setting(
@@ -150,7 +161,7 @@ function wpgraphql_strava_register_settings(): void {
 		'wpgraphql_strava_svg_color',
 		__( 'Stroke Color', 'graphql-strava-activities' ),
 		'wpgraphql_strava_render_color_field',
-		'wpgraphql-strava',
+		'wpgraphql-strava-settings',
 		'wpgraphql_strava_svg'
 	);
 
@@ -168,7 +179,7 @@ function wpgraphql_strava_register_settings(): void {
 		'wpgraphql_strava_svg_stroke_width',
 		__( 'Stroke Width', 'graphql-strava-activities' ),
 		'wpgraphql_strava_render_number_field',
-		'wpgraphql-strava',
+		'wpgraphql-strava-settings',
 		'wpgraphql_strava_svg',
 		[
 			'option' => 'wpgraphql_strava_svg_stroke_width',
@@ -185,7 +196,7 @@ function wpgraphql_strava_register_settings(): void {
 		'wpgraphql_strava_display',
 		__( 'Display', 'graphql-strava-activities' ),
 		'__return_null',
-		'wpgraphql-strava'
+		'wpgraphql-strava-settings'
 	);
 
 	register_setting(
@@ -202,7 +213,7 @@ function wpgraphql_strava_register_settings(): void {
 		'wpgraphql_strava_cron_schedule',
 		__( 'Sync Frequency', 'graphql-strava-activities' ),
 		'wpgraphql_strava_render_cron_field',
-		'wpgraphql-strava',
+		'wpgraphql-strava-settings',
 		'wpgraphql_strava_display'
 	);
 
@@ -220,7 +231,7 @@ function wpgraphql_strava_register_settings(): void {
 		'wpgraphql_strava_units',
 		__( 'Distance Units', 'graphql-strava-activities' ),
 		'wpgraphql_strava_render_units_field',
-		'wpgraphql-strava',
+		'wpgraphql-strava-settings',
 		'wpgraphql_strava_display'
 	);
 }
@@ -392,7 +403,7 @@ function wpgraphql_strava_handle_resync(): void {
 		);
 	}
 
-	wp_safe_redirect( admin_url( 'admin.php?page=wpgraphql-strava' ) );
+	wp_safe_redirect( admin_url( 'admin.php?page=wpgraphql-strava-settings' ) );
 	exit;
 }
 
@@ -436,7 +447,7 @@ function wpgraphql_strava_render_admin_page(): void {
 		<form action="options.php" method="post">
 			<?php
 			settings_fields( 'wpgraphql_strava_settings' );
-			do_settings_sections( 'wpgraphql-strava' );
+			do_settings_sections( 'wpgraphql-strava-settings' );
 			submit_button( __( 'Save Settings', 'graphql-strava-activities' ) );
 			?>
 		</form>
@@ -531,7 +542,7 @@ function wpgraphql_strava_render_guide_page(): void {
 		return;
 	}
 
-	$settings_url = admin_url( 'admin.php?page=wpgraphql-strava' );
+	$settings_url = admin_url( 'admin.php?page=wpgraphql-strava-settings' );
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Getting Started with GraphQL Strava Activities', 'graphql-strava-activities' ); ?></h1>
@@ -936,7 +947,7 @@ function wpgraphql_strava_render_preview_page(): void {
 
 	$stroke_color = get_option( 'wpgraphql_strava_svg_color', '#0d9488' );
 	$stroke_width = get_option( 'wpgraphql_strava_svg_stroke_width', 2.5 );
-	$settings_url = admin_url( 'admin.php?page=wpgraphql-strava' );
+	$settings_url = admin_url( 'admin.php?page=wpgraphql-strava-settings' );
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Preview', 'graphql-strava-activities' ); ?></h1>
