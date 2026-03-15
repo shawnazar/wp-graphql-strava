@@ -58,14 +58,14 @@ function wpgraphql_strava_fetch_activities( int $count = 200 ): array {
 	);
 
 	if ( is_wp_error( $response ) ) {
-		error_log( 'WPGraphQL Strava: API error — ' . $response->get_error_message() );
+		wp_trigger_error( __FUNCTION__, 'WPGraphQL Strava: API error — ' . $response->get_error_message() );
 		return [];
 	}
 
 	$status_code = wp_remote_retrieve_response_code( $response );
 
 	if ( 200 !== $status_code ) {
-		error_log( 'WPGraphQL Strava: API returned status ' . $status_code );
+		wp_trigger_error( __FUNCTION__, 'WPGraphQL Strava: API returned status ' . $status_code );
 
 		// Try refreshing the token once on 401.
 		if ( 401 === $status_code ) {
@@ -181,7 +181,7 @@ function wpgraphql_strava_refresh_access_token(): string {
 	);
 
 	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-		error_log( 'WPGraphQL Strava: token refresh failed.' );
+		wp_trigger_error( __FUNCTION__, 'WPGraphQL Strava: token refresh failed.' );
 		return '';
 	}
 

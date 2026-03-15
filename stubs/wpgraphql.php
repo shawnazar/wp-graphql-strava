@@ -5,12 +5,16 @@
  * @package WPGraphQL\Strava
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * @param string               $type_name Type name.
  * @param array<string, mixed> $config    Type configuration.
  * @return void
  */
-function register_graphql_object_type( string $type_name, array $config ): void {}
+function register_graphql_object_type( string $type_name, array $config ): void {} // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- WPGraphQL stub.
 
 /**
  * @param string               $type_name  Type to extend.
@@ -18,4 +22,4 @@ function register_graphql_object_type( string $type_name, array $config ): void 
  * @param array<string, mixed> $config     Field configuration.
  * @return void
  */
-function register_graphql_field( string $type_name, string $field_name, array $config ): void {}
+function register_graphql_field( string $type_name, string $field_name, array $config ): void {} // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- WPGraphQL stub.

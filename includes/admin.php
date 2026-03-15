@@ -765,7 +765,7 @@ function wpgraphql_strava_render_guide_page(): void {
 			<div class="card" style="max-width: 800px; padding: 16px 24px;">
 				<h2 style="margin-top: 8px;"><?php esc_html_e( 'Credential Encryption (Optional)', 'graphql-strava-activities' ); ?></h2>
 				<p><?php esc_html_e( 'For additional security, you can encrypt your stored credentials at rest. Add this line to your wp-config.php:', 'graphql-strava-activities' ); ?></p>
-				<code style="display: block; padding: 8px; margin: 8px 0; background: #f0f0f1; font-size: 13px;">define( 'GRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-64-character-hex-key' );</code>
+				<code style="display: block; padding: 8px; margin: 8px 0; background: #f0f0f1; font-size: 13px;">define( 'WPGRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-64-character-hex-key' );</code>
 				<p><?php esc_html_e( 'Generate a key with:', 'graphql-strava-activities' ); ?>
 					<code>wp eval "echo bin2hex(random_bytes(32));"</code>
 				</p>

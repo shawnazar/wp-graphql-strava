@@ -23,8 +23,8 @@ class EncryptionTest extends TestCase {
         parent::setUp();
 
         // Define the encryption key if not already defined.
-        if ( ! defined( 'GRAPHQL_STRAVA_ENCRYPTION_KEY' ) ) {
-            define( 'GRAPHQL_STRAVA_ENCRYPTION_KEY', bin2hex( random_bytes( 32 ) ) );
+        if ( ! defined( 'WPGRAPHQL_STRAVA_ENCRYPTION_KEY' ) ) {
+            define( 'WPGRAPHQL_STRAVA_ENCRYPTION_KEY', bin2hex( random_bytes( 32 ) ) );
         }
     }
 

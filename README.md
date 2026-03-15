@@ -113,7 +113,7 @@ For non-headless WordPress sites — use in posts and pages:
 Add to `wp-config.php`:
 
 ```php
-define( 'GRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-64-char-hex-key' );
+define( 'WPGRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-64-char-hex-key' );
 ```
 
 Generate a key: `wp eval "echo bin2hex(random_bytes(32));"`

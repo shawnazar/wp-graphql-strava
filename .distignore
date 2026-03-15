@@ -5,6 +5,7 @@
 /.github/
 /.gitignore
 /.distignore
+/.phpunit.result.cache
 /composer.json
 /composer.lock
 /node_modules/

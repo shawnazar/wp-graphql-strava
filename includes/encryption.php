@@ -6,9 +6,9 @@
  * stored in wp_options and decrypts them on retrieval. Uses AES-256-CBC
  * via OpenSSL.
  *
- * To enable, define GRAPHQL_STRAVA_ENCRYPTION_KEY in wp-config.php:
+ * To enable, define WPGRAPHQL_STRAVA_ENCRYPTION_KEY in wp-config.php:
  *
- *     define( 'GRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-random-64-char-hex-string' );
+ *     define( 'WPGRAPHQL_STRAVA_ENCRYPTION_KEY', 'your-random-64-char-hex-string' );
  *
  * Generate a key with: wp eval "echo bin2hex(random_bytes(32));"
  *
@@ -51,8 +51,8 @@ define(
  * @return bool True when a valid encryption key is defined and OpenSSL is loaded.
  */
 function wpgraphql_strava_encryption_enabled(): bool {
-	return defined( 'GRAPHQL_STRAVA_ENCRYPTION_KEY' )
-		&& ! empty( GRAPHQL_STRAVA_ENCRYPTION_KEY )
+	return defined( 'WPGRAPHQL_STRAVA_ENCRYPTION_KEY' )
+		&& ! empty( WPGRAPHQL_STRAVA_ENCRYPTION_KEY )
 		&& function_exists( 'openssl_encrypt' );
 }
 
@@ -67,7 +67,7 @@ function wpgraphql_strava_encrypt( string $value ): string {
 		return $value;
 	}
 
-	$key    = hex2bin( GRAPHQL_STRAVA_ENCRYPTION_KEY );
+	$key    = hex2bin( WPGRAPHQL_STRAVA_ENCRYPTION_KEY );
 	$iv_len = openssl_cipher_iv_length( WPGRAPHQL_STRAVA_CIPHER );
 
 	if ( false === $key || false === $iv_len ) {
@@ -103,7 +103,7 @@ function wpgraphql_strava_decrypt( string $value ): string {
 		return '';
 	}
 
-	$key    = hex2bin( GRAPHQL_STRAVA_ENCRYPTION_KEY );
+	$key    = hex2bin( WPGRAPHQL_STRAVA_ENCRYPTION_KEY );
 	$iv_len = openssl_cipher_iv_length( WPGRAPHQL_STRAVA_CIPHER );
 
 	if ( false === $key || false === $iv_len ) {

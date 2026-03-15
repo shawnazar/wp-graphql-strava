@@ -40,7 +40,7 @@ The plugin sends your OAuth tokens to authenticate API requests. No personal dat
 
 ## How do I enable credential encryption?
 
-Add a `GRAPHQL_STRAVA_ENCRYPTION_KEY` constant to `wp-config.php`. See [Encryption](encryption.md) for full setup instructions.
+Add a `WPGRAPHQL_STRAVA_ENCRYPTION_KEY` constant to `wp-config.php`. See [Encryption](encryption.md) for full setup instructions.
 
 ## Is there a rate limit?
 
