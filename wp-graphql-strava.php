@@ -5,7 +5,7 @@
  * Description:       Extends WPGraphQL with Strava activity data, server-side SVG route maps, and activity photos.
  * Version:           1.0.0
  * Requires at least: 6.0
- * Requires PHP:      8.0
+ * Requires PHP:      8.2
  * Requires Plugins:  wp-graphql
  * Author:            Shawn Azar
  * Author URI:        https://shawnazar.me

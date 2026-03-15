@@ -1,0 +1,16 @@
+grumphp:
+  hooks_dir: ~
+  hooks_preset: local
+  stop_on_failure: true
+  process_timeout: 120
+
+  tasks:
+    phpcs:
+      standard:
+        - phpcs.xml.dist
+      triggered_by:
+        - php
+
+    phpunit:
+      config_file: phpunit.xml.dist
+      always_execute: true

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integration tests for cache module (duration formatting, activity processing, distance conversion)
 - GitHub Actions CI workflow — PHP 8.0-8.3 matrix with lint + test on every push/PR
 - `composer test`, `composer test:unit`, `composer test:integration` scripts
+- GrumPHP pre-commit hooks — lint and tests run automatically on every commit
 - Sample Strava API response fixture for test mocking
 
 ## [1.0.0] - 2026-03-15

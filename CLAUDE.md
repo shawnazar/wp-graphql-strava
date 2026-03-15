@@ -106,9 +106,20 @@ All filters use the `wpgraphql_strava_` prefix:
 ## Commands
 
 ```bash
-composer install      # Install dev dependencies (WPCS)
+composer install      # Install dev dependencies + GrumPHP pre-commit hooks
 composer lint         # Check coding standards
 composer lint:fix     # Auto-fix violations
+composer test         # Run all tests
+composer test:unit    # Run unit tests only
+composer test:integration  # Run integration tests only
 ```
 
 No build step — pure PHP plugin.
+
+## Pre-commit Hooks
+
+GrumPHP runs automatically on every commit (installed via `composer install`):
+1. **phpcs** — WordPress coding standards check on changed PHP files
+2. **phpunit** — full test suite
+
+If either fails, the commit is blocked. Fix the issues and try again.

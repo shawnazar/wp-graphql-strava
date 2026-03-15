@@ -30,6 +30,7 @@ Open a [GitHub issue](https://github.com/shawnazar/wp-graphql-strava/issues/new)
    ```bash
    composer install
    ```
+   This also installs GrumPHP pre-commit hooks automatically. Every commit will run lint and tests before it's allowed.
 4. Install and activate [WPGraphQL](https://www.wpgraphql.com/) in your WordPress instance.
 
 ## Submitting a Pull Request
