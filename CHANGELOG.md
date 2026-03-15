@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-03-15
+
 ### Fixed
 - Replaced `error_log()` calls in API client with `wp_trigger_error()` for production use
 - Replaced `strip_tags()` in test mock with `wp_strip_all_tags()` for WPCS compliance

@@ -5,7 +5,7 @@ Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.2
 Requires Plugins: wp-graphql
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -119,6 +119,12 @@ Yes. Any frontend that can query WPGraphQL (Next.js, Gatsby, Astro, etc.) will w
 
 == Changelog ==
 
+= 1.0.1 =
+* Fixed: Replaced error_log() with wp_trigger_error() for production use.
+* Fixed: Renamed GRAPHQL_STRAVA_ENCRYPTION_KEY to WPGRAPHQL_STRAVA_ENCRYPTION_KEY for prefix consistency.
+* Fixed: Replaced strip_tags() with wp_strip_all_tags() in test mocks.
+* Fixed: Updated "Tested up to" to WordPress 6.9.
+
 = 1.0.0 =
 * Initial release.
 * GraphQL schema with StravaActivity type and stravaActivities query.
@@ -130,6 +136,9 @@ Yes. Any frontend that can query WPGraphQL (Next.js, Gatsby, Astro, etc.) will w
 * Extensible via WordPress filters and hooks.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Breaking: If you use credential encryption, rename GRAPHQL_STRAVA_ENCRYPTION_KEY to WPGRAPHQL_STRAVA_ENCRYPTION_KEY in wp-config.php.
 
 = 1.0.0 =
 Initial release.
