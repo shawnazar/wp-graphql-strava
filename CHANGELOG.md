@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin Check (PCP) now fails CI on errors (was output-only)
 - Security CI job: `composer audit`, debug code detection, hardcoded secret scanning, unsafe PHP function detection
 - PHPCS and PHPStan results uploaded to GitHub Code Scanning via SARIF
+- Automated release workflow — code owners run `Release Version` from Actions tab (patch/minor/major)
 - Dependency Review on PRs (fails on high-severity vulnerabilities)
 
 ## [1.0.3] - 2026-03-15

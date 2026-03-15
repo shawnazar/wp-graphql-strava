@@ -1,0 +1,115 @@
+name: Release Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Bump version and tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Calculate next version
+        id: version
+        run: |
+          CURRENT=$(grep -oP "Version:\s+\K[0-9.]+" graphql-strava-activities.php)
+          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+
+          case "${{ inputs.bump_type }}" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+
+          NEXT="${MAJOR}.${MINOR}.${PATCH}"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "Bumping $CURRENT → $NEXT (${{ inputs.bump_type }})"
+
+      - name: Verify changelog has unreleased entries
+        run: |
+          UNRELEASED=$(sed -n '/^## \[Unreleased\]/,/^## \[/p' CHANGELOG.md | grep -c '^- ' || true)
+          echo "Unreleased entries: $UNRELEASED"
+          if [ "$UNRELEASED" -eq 0 ]; then
+            echo "::error::CHANGELOG.md has no entries under [Unreleased]. Nothing to release."
+            exit 1
+          fi
+
+      - name: Bump version in plugin files
+        run: |
+          CURRENT="${{ steps.version.outputs.current }}"
+          NEXT="${{ steps.version.outputs.next }}"
+
+          # Plugin header.
+          sed -i "s/Version:           ${CURRENT}/Version:           ${NEXT}/" graphql-strava-activities.php
+
+          # PHP constant.
+          sed -i "s/WPGRAPHQL_STRAVA_VERSION', '${CURRENT}'/WPGRAPHQL_STRAVA_VERSION', '${NEXT}'/" graphql-strava-activities.php
+
+          # readme.txt stable tag.
+          sed -i "s/Stable tag: ${CURRENT}/Stable tag: ${NEXT}/" readme.txt
+
+      - name: Update changelog
+        run: |
+          NEXT="${{ steps.version.outputs.next }}"
+          DATE=$(date +%Y-%m-%d)
+
+          # Insert new version header after [Unreleased], keep [Unreleased] empty.
+          sed -i "s/^## \[Unreleased\]/## [Unreleased]\n\n## [${NEXT}] - ${DATE}/" CHANGELOG.md
+
+      - name: Commit and tag
+        run: |
+          NEXT="${{ steps.version.outputs.next }}"
+
+          git add graphql-strava-activities.php readme.txt CHANGELOG.md
+          git commit -m "chore: bump version to ${NEXT}"
+          git tag "${NEXT}"
+
+      - name: Push
+        run: |
+          NEXT="${{ steps.version.outputs.next }}"
+          git push origin main
+          git push origin "${NEXT}"
+
+      - name: Summary
+        run: |
+          NEXT="${{ steps.version.outputs.next }}"
+          echo "### Release ${NEXT} 🚀" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Version bumped: ${{ steps.version.outputs.current }} → ${NEXT}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tag \`${NEXT}\` pushed — release and deploy workflows will run automatically" >> "$GITHUB_STEP_SUMMARY"
+          echo "- [View releases](https://github.com/${{ github.repository }}/releases)" >> "$GITHUB_STEP_SUMMARY"
