@@ -37,6 +37,7 @@ includes/
 ├── admin.php                  # Settings page + Getting Started + Preview + Activities
 ├── graphql.php                # StravaActivity type + stravaActivities query
 ├── shortcodes.php             # WordPress shortcodes for non-headless sites
+├── updater.php                # Self-hosted update checker via GitHub Releases API
 └── class-wpgraphql-strava-activities-list-table.php  # WP_List_Table for Activities page
 ```
 

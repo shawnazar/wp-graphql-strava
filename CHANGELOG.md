@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Self-hosted update checker — manually-installed copies receive update notifications via GitHub Releases API
 - Integration tests for API client (11 tests: token refresh, error handling, 401 retry)
 - Integration tests for GraphQL schema (7 tests: type registration, resolver, filtering)
 - Integration tests for shortcodes (12 tests: all 5 shortcodes, card rendering)

@@ -16,8 +16,10 @@ parameters:
     treatPhpDocTypesAsCertain: false
     dynamicConstantNames:
         - WPGRAPHQL_STRAVA_ENCRYPTION_KEY
+        - WPGRAPHQL_STRAVA_DIR
     ignoreErrors:
         - '#PHPDoc tag @var does not specify variable name#'
         - '#Constant WPGRAPHQL_STRAVA_ENCRYPTION_KEY not found#'
+        - '#Constant WPGRAPHQL_STRAVA_DIR not found#'
     scanFiles:
         - stubs/wpgraphql.php
