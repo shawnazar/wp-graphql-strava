@@ -164,15 +164,27 @@ function wpgraphql_strava_process_activities( array $raw_activities ): array {
 		}
 
 		$processed[] = [
-			'title'     => sanitize_text_field( $activity['name'] ?? __( 'Activity', 'graphql-strava-activities' ) ),
-			'distance'  => $distance,
-			'duration'  => wpgraphql_strava_format_duration( $moving_time ),
-			'date'      => $activity['start_date'] ?? '',
-			'svgMap'    => wpgraphql_strava_polyline_to_svg( $polyline ),
-			'stravaUrl' => $strava_id ? 'https://www.strava.com/activities/' . $strava_id : '',
-			'type'      => sanitize_text_field( $type ),
-			'photoUrl'  => esc_url_raw( $photo_url ),
-			'unit'      => $unit,
+			'title'          => sanitize_text_field( $activity['name'] ?? __( 'Activity', 'graphql-strava-activities' ) ),
+			'distance'       => $distance,
+			'duration'       => wpgraphql_strava_format_duration( $moving_time ),
+			'date'           => $activity['start_date'] ?? '',
+			'svgMap'         => wpgraphql_strava_polyline_to_svg( $polyline ),
+			'stravaUrl'      => $strava_id ? 'https://www.strava.com/activities/' . $strava_id : '',
+			'type'           => sanitize_text_field( $type ),
+			'photoUrl'       => esc_url_raw( $photo_url ),
+			'unit'           => $unit,
+			'elevationGain'  => isset( $activity['total_elevation_gain'] ) ? round( (float) $activity['total_elevation_gain'], 1 ) : 0.0,
+			'averageSpeed'   => isset( $activity['average_speed'] ) ? round( (float) $activity['average_speed'], 2 ) : 0.0,
+			'maxSpeed'       => isset( $activity['max_speed'] ) ? round( (float) $activity['max_speed'], 2 ) : 0.0,
+			'averageHeartrate' => isset( $activity['average_heartrate'] ) ? round( (float) $activity['average_heartrate'] ) : null,
+			'maxHeartrate'   => isset( $activity['max_heartrate'] ) ? (int) $activity['max_heartrate'] : null,
+			'calories'       => isset( $activity['kilojoules'] ) ? round( (float) $activity['kilojoules'] * 0.239006, 0 ) : null,
+			'kudosCount'     => isset( $activity['kudos_count'] ) ? (int) $activity['kudos_count'] : 0,
+			'commentCount'   => isset( $activity['comment_count'] ) ? (int) $activity['comment_count'] : 0,
+			'startLatlng'    => $activity['start_latlng'] ?? null,
+			'city'           => sanitize_text_field( $activity['location_city'] ?? '' ),
+			'country'        => sanitize_text_field( $activity['location_country'] ?? '' ),
+			'isPrivate'      => ! empty( $activity['private'] ),
 		];
 	}
 
