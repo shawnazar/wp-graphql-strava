@@ -891,11 +891,16 @@ function wpgraphql_strava_render_admin_page(): void {
 
 		<?php
 		$oauth_url = function_exists( 'wpgraphql_strava_get_oauth_url' ) ? wpgraphql_strava_get_oauth_url() : '';
-		if ( ! empty( $oauth_url ) && ! $has_token ) :
+		if ( ! empty( $oauth_url ) ) :
 			?>
 			<div class="card" style="max-width: 600px; padding: 16px 24px; margin: 16px 0;">
-				<h3 style="margin-top: 8px;"><?php esc_html_e( 'Connect with Strava', 'graphql-strava-activities' ); ?></h3>
-				<p><?php esc_html_e( 'Save your Client ID and Client Secret above, then click the button below to authorize. Tokens will be fetched automatically.', 'graphql-strava-activities' ); ?></p>
+				<?php if ( $has_token ) : ?>
+					<h3 style="margin-top: 8px;"><?php esc_html_e( 'Reconnect with Strava', 'graphql-strava-activities' ); ?></h3>
+					<p><?php esc_html_e( 'Already connected. Click below to re-authorize if you need to update your tokens.', 'graphql-strava-activities' ); ?></p>
+				<?php else : ?>
+					<h3 style="margin-top: 8px;"><?php esc_html_e( 'Connect with Strava', 'graphql-strava-activities' ); ?></h3>
+					<p><?php esc_html_e( 'Save your Client ID and Client Secret above, then click the button below to authorize. Tokens will be fetched automatically.', 'graphql-strava-activities' ); ?></p>
+				<?php endif; ?>
 				<a href="<?php echo esc_url( $oauth_url ); ?>">
 					<img src="<?php echo esc_url( plugins_url( 'assets/btn-strava-connectwith-orange.svg', dirname( __DIR__ ) ) ); ?>"
 						alt="<?php esc_attr_e( 'Connect with Strava', 'graphql-strava-activities' ); ?>"
