@@ -45,3 +45,35 @@ Add a `WPGRAPHQL_STRAVA_ENCRYPTION_KEY` constant to `wp-config.php`. See [Encryp
 ## Is there a rate limit?
 
 Strava allows 100 requests per 15 minutes and 1,000 per day. The plugin includes a 200ms delay between detail requests and estimates API usage in the sync frequency dropdown. With the default 12-hour sync, usage is approximately 12 calls/day.
+
+## Can I use this with Elementor?
+
+Yes. A native Elementor widget is included — search for "Strava Activities" in the Elementor widget panel. See [Elementor Widget](elementor.md).
+
+## Can I use this with the block editor?
+
+Yes. A Gutenberg block called "Strava Activities" is available in the block inserter with live preview.
+
+## Does this support dark mode?
+
+Yes. SVG route maps automatically detect system dark mode via `prefers-color-scheme: dark`. Customize the dark mode colour with the `wpgraphql_strava_svg_dark_color` filter.
+
+## Is there a REST API?
+
+Yes. `GET /wp-json/wpgraphql-strava/v1/activities` with `count`, `offset`, `type`, and `user_id` parameters. See [REST API](rest-api.md).
+
+## How do I export my activities?
+
+Click **Export CSV** on the **Strava → Activities** admin page. See [CSV Export](csv-export.md).
+
+## Can I use WP-CLI?
+
+Yes. `wp strava sync` and `wp strava status`. See [WP-CLI Commands](wp-cli.md).
+
+## Does this support real-time updates?
+
+Yes, via Strava webhooks. See [Webhooks](webhooks.md).
+
+## Is this GDPR compliant?
+
+The plugin integrates with WordPress's personal data export and erasure tools. See [Privacy & GDPR](privacy.md).
