@@ -116,11 +116,6 @@ function wpgraphql_strava_init(): void {
 	require_once WPGRAPHQL_STRAVA_DIR . 'includes/privacy.php';
 	require_once WPGRAPHQL_STRAVA_DIR . 'includes/webhook.php';
 
-	// Gutenberg block.
-	if ( function_exists( 'register_block_type' ) ) {
-		register_block_type( WPGRAPHQL_STRAVA_DIR . 'blocks/strava-activities' );
-	}
-
 	// Elementor widget (only when Elementor is active).
 	if ( did_action( 'elementor/loaded' ) ) {
 		add_action(
@@ -134,6 +129,39 @@ function wpgraphql_strava_init(): void {
 }
 
 add_action( 'plugins_loaded', 'wpgraphql_strava_init' );
+
+/**
+ * Register the Gutenberg block on init (not plugins_loaded).
+ *
+ * Block registration must happen at init or later to avoid
+ * premature script enqueuing and textdomain loading.
+ *
+ * @return void
+ */
+function wpgraphql_strava_register_block(): void {
+	if ( ! wpgraphql_strava_dependencies_met() ) {
+		return;
+	}
+
+	if ( function_exists( 'register_block_type' ) ) {
+		register_block_type( WPGRAPHQL_STRAVA_DIR . 'blocks/strava-activities' );
+	}
+}
+
+add_action( 'init', 'wpgraphql_strava_register_block' );
+
+/**
+ * Load the plugin text domain for translations.
+ *
+ * Must run on init to avoid the _load_textdomain_just_in_time notice.
+ *
+ * @return void
+ */
+function wpgraphql_strava_load_textdomain(): void {
+	load_plugin_textdomain( 'graphql-strava-activities', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+
+add_action( 'init', 'wpgraphql_strava_load_textdomain' );
 
 // Self-hosted update checker — runs independently of WPGraphQL.
 require_once WPGRAPHQL_STRAVA_DIR . 'includes/updater.php';
