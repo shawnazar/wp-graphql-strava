@@ -1,6 +1,6 @@
 # Shortcodes & Block
 
-For non-headless WordPress sites, the plugin provides 5 shortcodes and a Gutenberg block to display Strava data in posts and pages.
+For non-headless WordPress sites, the plugin provides 8 shortcodes, a Gutenberg block, and an Elementor widget to display Strava data in posts and pages.
 
 ## Gutenberg Block
 
@@ -79,6 +79,44 @@ Displays the most recent activity, optionally filtered by type.
 
 ```
 [strava_latest type="Ride"]
+```
+
+### `[strava_heatmap]`
+
+Overlays all cached routes on one SVG to show frequently used paths.
+
+| Attribute | Type | Default | Description |
+|---|---|---|---|
+| `width` | int | `400` | Width in pixels |
+| `height` | int | `300` | Height in pixels |
+
+```
+[strava_heatmap width="600" height="400"]
+```
+
+### `[strava_year_review]`
+
+Year-in-review aggregate statistics with monthly distance bar chart.
+
+| Attribute | Type | Default | Description |
+|---|---|---|---|
+| `year` | int | Current year | Year to summarise |
+
+```
+[strava_year_review year="2026"]
+```
+
+### `[strava_trends]`
+
+Weekly distance trend chart with rolling average line.
+
+| Attribute | Type | Default | Description |
+|---|---|---|---|
+| `weeks` | int | `12` | Number of weeks (4–52) |
+| `type` | string | — | Filter by activity type |
+
+```
+[strava_trends weeks="24" type="Ride"]
 ```
 
 ## Strava Brand Attribution

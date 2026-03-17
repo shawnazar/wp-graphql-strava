@@ -34,7 +34,7 @@ Load order matters — `encryption.php` and `polyline.php` must load before modu
 5. `cache.php` — needed by graphql.php, admin.php, rest-api.php, shortcodes.php
 6. `oauth.php` — Strava OAuth callback handler (loaded before admin.php)
 7. `admin.php` — WordPress admin UI (test connection, resync, settings)
-8. `graphql.php` — WPGraphQL type registration (22 fields)
+8. `graphql.php` — WPGraphQL type registration (23 fields)
 9. `rest-api.php` — REST API endpoint registration
 10. `shortcodes.php` — WordPress shortcodes + editor generator button
 11. `cli.php` — WP-CLI commands (loaded only when WP_CLI is active)
