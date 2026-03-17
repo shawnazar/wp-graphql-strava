@@ -13,6 +13,7 @@ grumphp:
 
     phpstan:
       configuration: phpstan.neon.dist
+      use_grumphp_paths: false
       triggered_by:
         - php
 
